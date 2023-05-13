@@ -28,7 +28,7 @@ function Login() {
 
   const sendCode = (value, action) => {
     console.log(value);
-    setotp({ status: true, num: "987654321" });
+    setotp({ status: true, num: value.phoneNum });
     action.setSubmitting(false);
   };
 
@@ -44,7 +44,7 @@ function Login() {
         </div>
 
         {!otp.status ? (
-          <Formik
+          <Formik 
             onSubmit={sendCode}
             initialValues={{ phoneNum: "", validNum: "" }}
             validate={sendCodeValidate}
