@@ -1,5 +1,5 @@
 import { useState } from "react";
-import EditProfile from "./EditProfile";
+import EditProfile from "./PopUp/EditProfile";
 import Profile from "../../../asset/Logo1.png";
 
 function AdminProfile() {

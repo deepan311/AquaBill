@@ -46,17 +46,20 @@ function Login() {
         {!otp.status ? (
           <Formik 
             onSubmit={sendCode}
-            initialValues={{ phoneNum: "", validNum: "" }}
+            initialValues={{ phoneNum: '', validNum: "" }}
             validate={sendCodeValidate}
           >
             {({ errors }) => (
               <Form>
-                <Field
+              <div className="w-full flex items-center bg-white h-11">
+                <h3 className="font-bold pl-2">+91</h3>
+              <Field
                   name="phoneNum"
                   type="number"
                   className="w-full h-11 my-5 px-5 outline-none "
                   placeholder="Enter Phone Number"
                 />
+              </div>
                 <div className="w-full flex justify-center">
                   <ImSpinner9 className="text-white text-xl animate-spin" />
                 </div>
@@ -83,12 +86,14 @@ function Login() {
                     Resend{" "}
                   </span>
                 </h3>
-                <Field
+              
+               <Field
                   name="validNum"
                   type="number"
                   className="w-full h-11 my-5 px-5 outline-none "
                   placeholder="Enter OTP Code"
                 />
+              
                 <div className="w-full flex justify-center">
                   <ImSpinner9 className="text-white text-xl animate-spin" />
                 </div>

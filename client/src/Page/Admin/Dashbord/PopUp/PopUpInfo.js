@@ -22,7 +22,7 @@ function PopUpInfo({ data, setPopUpData, onSave }) {
       error.email = "Enter valid Email";
     }
     if (e.name.length < 1) {
-      error.name = "";
+      error.name = "Enter Name";
     }
     if (e.address.length < 5) {
       error.address = "Minimum 5 charecter";
@@ -46,22 +46,25 @@ function PopUpInfo({ data, setPopUpData, onSave }) {
       {({ errors, touched }) => (
         <Form>
           <div className="fixed top-0  right-0 h-screen w-screen flex items-center justify-center bg-black/80">
-            <div className=" relative bg-gradient-to-br px-10 from-blue-400 to-blue-600 rounded-lg shadow-lg p-6">
+            <div className=" relative bg-gradient-to-tr from-black/90 to-gray-900/90 px-11 text-white rounded-sm shadow-lg w-2/6 p-6">
               <h2 className="text-lg font-medium mb-2">Edit Profile</h2>
-              <button
+            <div className=" w-full flex justify-end">
+                 <button
                 type="button"
                 onClick={() => {
                   setedit(true);
                 }}
-                className="p-2 text-white  w-full flex justify-end "
+                className="p-2 text-white  flex bg-black/80 rounded-md px-5 "
               >
                 <h2>edit</h2>
                 <FiEdit className="text-xl  rounded" />
               </button>
+            </div>
+           
 
               {/* Name input */}
               <div className="mb-4">
-                <label className="block font-medium mb-1">Name</label>
+                <label className="block font-bold mb-1  ">Name</label>
                 <Field
                   disabled={!edit}
                   type="text"
@@ -75,7 +78,7 @@ function PopUpInfo({ data, setPopUpData, onSave }) {
 
               {/* Email input */}
               <div className="mb-4">
-                <label className="block font-medium mb-1">Email</label>
+                <label className="block font-bold mb-1  ">Email</label>
                 <Field
                   disabled={!edit}
                   type="email"
@@ -89,13 +92,13 @@ function PopUpInfo({ data, setPopUpData, onSave }) {
 
               {/* Address input */}
               <div className="mb-4">
-                <label className="block font-medium mb-1">Address</label>
+                <label className="block font-bold mb-1  ">Address</label>
                 <Field
                   disabled={!edit}
                   name="address"
                   type="text"
                   component="textarea"
-                  className="h-21 px-3 outline-none block w-full text-black rounded-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="h-21 px-3 max-h-40 overflow-y outline-none block w-full text-black rounded-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 />
                 <h2 className="text-red-700 text-sm font-bold">
                   {errors.address && touched.address && errors.address}
@@ -104,21 +107,21 @@ function PopUpInfo({ data, setPopUpData, onSave }) {
 
               {/* PendingAmount */}
               <div className="mb-4">
-                <label className="block font-medium mb-1">PendingAmount</label>
+                <label className="block font-bold mb-1  ">PendingAmount</label>
                 <Field
                   disabled={!edit}
                   name="PendingAmount"
                   type="text"
-                  className="h-21 px-3 outline-none block w-full text-black rounded-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                  className="h-9 px-3 outline-none block w-full text-black rounded-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                 />
                 <h2 className="text-red-700 text-sm font-bold">
-                  {errors.address && touched.address && errors.address}
+                  {errors.PendingAmount && touched.PendingAmount && errors.PendingAmount}
                 </h2>
               </div>
 
               {/* Roll */}
               <div className="mb-4">
-                <label className="block font-medium mb-1">Roll</label>
+                <label className="block font-bold mb-1  ">Roll</label>
                 <Field
                   as="select"
                   disabled={!edit}
@@ -143,18 +146,18 @@ function PopUpInfo({ data, setPopUpData, onSave }) {
                 <button
                   disabled={!edit}
                   type="submit"
-                  className="bg-black/80 hover:bg-black/60 text-white rounded-md py-2 px-7"
+                  className={` rounded-md py-2 px-7  ${edit ? 'bg-blue-400  text-black ' : 'bg-gray-400/20  text-white/40'} `}
                 >
                   Save
                 </button>
                 <button
-                  className="bg-red-200 hover:bg-white/60 text-black rounded-md py-2 px-7"
+                  className="bg-white hover:bg-white/60 text-black rounded-md py-2 px-7"
                   onClick={() => {
                     setPopUpData({ status: false, data: null });
                   }}
                   type="button"
                 >
-                  close
+                  Cancel
                 </button>
               </div>
 

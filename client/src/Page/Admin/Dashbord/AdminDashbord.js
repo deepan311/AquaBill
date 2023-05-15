@@ -11,6 +11,7 @@ import AdminInfo from "./AminInfo";
 import AdminProfile from "./AdminProfile";
 
 import { Routes, Route, NavLink, useLocation } from "react-router-dom";
+import Average from "./Average";
 
 function AdminDashbord() {
   const [isOpen, setIsOpen] = useState(false);
@@ -104,7 +105,7 @@ function AdminDashbord() {
         <div className="  lg:col-span-1 bg-gradient-to-tr from-black to-gray-900 flex justify-between flex-col items-center">
           <div className=" text-white w-full  py-6 flex-shrink-0">
             <div className="flex items-center justify-center mb-8">
-              <span className="text-2xl font-bold">Dashboard</span>
+              <NavLink to='/admin' className="text-2xl font-bold">Dashboard</NavLink>
             </div>
             <ul className="space-y-4 ">
               <li>
@@ -161,6 +162,7 @@ function AdminDashbord() {
         {/* Main Content */}
         <div className="lg:col-span-5 h-screen bg-gradient-to-tr from-blue-400 via-blue-200 to-blue-400 p-4 overflow-auto">
           <Routes>
+            <Route path="/" element={<Average/>} />
             <Route path="user-info" element={<UserInfo />} />
             <Route path="admin-info" element={<AdminInfo />} />
             <Route path="profile" element={<AdminProfile />} />

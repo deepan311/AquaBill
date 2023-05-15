@@ -9,6 +9,7 @@ function App() {
  <div>
   <Routes>
     <Route path='/' element={<>deepan</>}/>
+    <Route path='/login' element={<Login/>}/>
     <Route path='/admin/*' element={<AdminDashbord/>}/>
     <Route path='/admin-login' element={<AdminLogin/>}/>
   </Routes>

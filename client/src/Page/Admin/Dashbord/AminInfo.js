@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
-import PopUpInfo from "./PopUpInfo";
+import PopUpInfo from "./PopUp/PopUpInfo";
 
 const data = [
   { uid: 1, name: "John Doe" },
