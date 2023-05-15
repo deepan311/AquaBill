@@ -7,6 +7,8 @@ import { NavLink } from "react-router-dom";
 
 function AdminLogin() {
   const [pageload, setpageload] = useState(false);
+  const {signIn,error} = useContext(AuthContext)
+
 
 const errName = ()=>{
   if(error){
@@ -20,7 +22,6 @@ const errName = ()=>{
     }
   }
 }
-  const {signIn,error} = useContext(AuthContext)
 
   const loginValidate = (e) => {
     let error = {};

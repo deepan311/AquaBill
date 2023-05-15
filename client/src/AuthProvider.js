@@ -5,7 +5,7 @@ import {
   createUserDoc,
   deleteUserAndData,
 } from "./firebase/config";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc,collection,onSnapshot } from "firebase/firestore";
 
 import {
   createUserWithEmailAndPassword,
@@ -23,6 +23,7 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
+  const [allData, setallData] = useState([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -62,6 +63,23 @@ const AuthProvider = ({ children }) => {
     });
   };
 
+  const fetchAllData = async()=>{
+
+
+    const collectionRef = collection(firestore, "samData");
+
+    // Subscribe to the collection data
+    await onSnapshot(collectionRef, (snapshot) => {
+      const docs = [];
+      snapshot.forEach((doc) => {
+        // Add each document data to the docs array
+        docs.push({ id: doc.id, ...doc.data() });
+      });
+      setallData(docs);
+    });
+
+  }
+
   const signUp = async (email, password, addData) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -76,11 +94,13 @@ const AuthProvider = ({ children }) => {
           console.log("userdata create successfully");
           await sendEmailVerification(userCredential.user).then((send) => {
             console.log("VerifyLink Send successfully");
+
           });
         })
         .catch(async (err) => {
           await deleteUserAndData(userCredential.user);
         });
+        // return userCredential
       setLoading(false);
     } catch (error) {
       setError(error.message || error);
@@ -119,6 +139,8 @@ const AuthProvider = ({ children }) => {
     createUser,
     setError,
     setLoading,
+    fetchAllData,
+    allData
   };
 
   return (

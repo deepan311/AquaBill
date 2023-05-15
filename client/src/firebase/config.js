@@ -41,7 +41,7 @@ export const createUserDoc = async (user, addData) => {
 
     const info = await setDoc(useRef, {
       email,
-      name:addData.password,
+      name:addData.name,
       address:addData.address,
       phone:addData.num,
       paymentBill:null,

@@ -1,26 +1,37 @@
-import React, { useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import PopUpInfo from "./PopUp/PopUpInfo";
+import { AuthContext } from "../../../AuthProvider";
+
+import { BiLoaderAlt } from "react-icons/bi";
 
 
-const data = [
-  { uid: 1, name: "John Doe" },
-  { uid: 2, name: "Jane Smith" },
-  { uid: 3, name: "Bob Johnson" },
-  { uid: 4, name: "Sara Wilson" },
-  { uid: 5, name: "Mike Davis" },
-  { uid: 6, name: "Emily Brown" },
-  { uid: 7, name: "Tom Wilson" },
-  { uid: 8, name: "Jessica Lee" },
-];
 
 const UserInfo = () => {
+
+  const { allData,fetchAllData } = useContext(AuthContext);
+
+  console.log(allData)
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
   const [PopUpData, setPopUpData] = useState({ status: false, data: null });
 
+useEffect(() => {
+    if(allData.length ===0 ){
+      const fetch = async()=>{
+        await fetchAllData()
+      }
+      fetch()
+    }
+}, []);
+
+if(allData.length ===0){
+return (  <div className="flex justify-center w-full  h-full items-center">
+<BiLoaderAlt className="text-2xl animate-spin text-black-500" />Loading...
+</div>)
+}
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -29,7 +40,7 @@ const UserInfo = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const filteredData = data.filter((item) =>
+  const filteredData = allData.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
@@ -65,16 +76,18 @@ const UserInfo = () => {
           <table className="table-auto border-collapse w-full ">
             <thead className="bg-black/80">
               <tr className=" border-gray-500">
-                <th className="px-4 py-5 ">UID</th>
+                <th className="px-4 py-5 ">email</th>
                 <th className="px-4 py-5">Name</th>
+                <th className="px-4 py-5">PhoneNumber</th>
                 <th className="px-4 py-5">info</th>
               </tr>
             </thead>
             <tbody className="bg-gradient-to-tr from-black to-gray-900">
               {currentItems.map((item) => (
-                <tr key={item.uid} className=" hover:bg-white/10 text-center">
-                  <td className="px-4 py-5">{item.uid}</td>
+                <tr key={item.id} className=" hover:bg-white/10 text-center">
+                  <td className="px-4 py-5">{item.email}</td>
                   <td className="px-4 py-5">{item.name}</td>
+                  <td className="px-4 py-5">{item.phone}</td>
                   <td onClick={() => {
                       setPopUpData({ status: true, data: item });
                     }}

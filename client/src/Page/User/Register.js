@@ -5,11 +5,20 @@ import { ImSpinner9 } from "react-icons/im";
 import { AuthContext } from "../../AuthProvider";
 
 function Register() {
-  const [showToast, setShowToast] = useState(true);
+  const [showToast, setShowToast] = useState(false);
   const [pageload, setpageload] = useState(false);
-  const { signUp } = useContext(AuthContext);
+  const { signUp,error } = useContext(AuthContext);
 
- 
+  const errName = ()=>{
+    if(error){
+      if(error.includes('Firebase: Error (auth/email-already-in-use).')){
+        return "User Already Exist"
+      }
+      else{
+        return error
+      }
+    }
+  }
    
 
   const initialValue = {
@@ -74,9 +83,12 @@ function Register() {
 
   const reg = async (val) => {
     setpageload(true);
-    await signUp(val.email, val.password, val);
-    setShowToast(true)
-    setpageload(false);
+   const response= await signUp(val.email, val.password, val);
+   setpageload(false);
+    
+   console.log(response)
+
+  
   };
 
 
@@ -220,6 +232,9 @@ function Register() {
                     <ImSpinner9 className="text-white text-xl animate-spin" />
                   </div>
                 )}
+                <h2 className={`font-bold text-red-500 text-center text-md my-2`}>
+                {error  && errName()}  
+              </h2>
 
                 <button
                   type="submit"
