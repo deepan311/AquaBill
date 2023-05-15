@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import Logo2 from "../../../asset/Logo2.png";
 import { AiFillDashboard } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
-import { FaUserFriends } from "react-icons/fa";
+import { FaUserFriends, FaUsers } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { RiBillFill } from "react-icons/ri";
 import UserInfo from "./UserInfo";
@@ -12,14 +12,41 @@ import AdminProfile from "./AdminProfile";
 
 import { Routes, Route, NavLink, useLocation } from "react-router-dom";
 import Average from "./Average";
+import { AuthContext } from "../../../AuthProvider";
+import { BiLoaderAlt } from "react-icons/bi";
+import Register from "../../User/Register";
 
 function AdminDashbord() {
+  const { logOut, fetchData, currentUser, userData } = useContext(AuthContext);
+
+  console.log(userData);
+
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+
+  if (!userData) {
+    return (
+      <div className="flex justify-center w-full bg-black/20 h-screen items-center">
+        <BiLoaderAlt className="text-2xl animate-spin text-black-500" />
+        DataLoading...
+      </div>
+    );
+  }
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
+
+  if (userData.roll != "admin") {
+    return (
+      <>
+        <div className="w-full h-screen bg-gray-300 flex justify-center items-center" >
+          <h2> oops! Sorry you Are not admin ...!</h2>
+          <NavLink to='/' className="bg-black/60 px-4 py-2 rounded-md text-white ">Go Back</NavLink>
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="w-full h-1 fixed ">
@@ -45,11 +72,7 @@ function AdminDashbord() {
 
             {/* Logo */}
             <div className="flex-shrink-0 w-full justify-center md:justify-start flex items-center">
-              <img
-                className="  h-12 w-auto"
-                src={Logo2}
-                alt="Workflow"
-              />
+              <img className="  h-12 w-auto" src={Logo2} alt="Workflow" />
             </div>
 
             {/* Desktop menu */}
@@ -65,8 +88,8 @@ function AdminDashbord() {
                 <a
                   href="#"
                   className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  <CgProfile className="text-2xl" />
+                ><h1>Hi</h1>
+                  <h3> {userData.name}</h3>
                 </a>
               </div>
             </div>
@@ -105,7 +128,9 @@ function AdminDashbord() {
         <div className="  lg:col-span-1 bg-gradient-to-tr from-black to-gray-900 flex justify-between flex-col items-center">
           <div className=" text-white w-full  py-6 flex-shrink-0">
             <div className="flex items-center justify-center mb-8">
-              <NavLink to='/admin' className="text-2xl font-bold">Dashboard</NavLink>
+              <NavLink to="/admin" className="text-2xl font-bold">
+                Dashboard
+              </NavLink>
             </div>
             <ul className="space-y-4 ">
               <li>
@@ -143,6 +168,17 @@ function AdminDashbord() {
               </li>
               <li>
                 <NavLink
+                  to="add-user"
+                  className={`flex items-center space-x-2 py-4 px-4 rounded-md hover:bg-blue-600 w-full ${
+                    location.pathname === "/admin/add-user" && "bg-blue-500"
+                  }`}
+                >
+                  <FaUsers />
+                  <span>Add User</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
                   to="profile"
                   className={`flex items-center space-x-2 py-4 px-4 rounded-md hover:bg-blue-600 w-full ${
                     location.pathname === "/admin/profile" && "bg-blue-500"
@@ -153,19 +189,19 @@ function AdminDashbord() {
                 </NavLink>
               </li>
             </ul>
-           
           </div>
         </div>
 
         {/* NavBar */}
 
         {/* Main Content */}
-        <div className="lg:col-span-5 h-screen bg-gradient-to-tr from-blue-400 via-blue-200 to-blue-400 p-4 overflow-auto">
+        <div className="lg:col-span-5 h-screen bg-gradient-to-tr from-blue-400 via-blue-200 to-blue-400 p-4 py-11 overflow-auto">
           <Routes>
-            <Route path="/" element={<Average/>} />
+            <Route path="/" element={<Average />} />
             <Route path="user-info" element={<UserInfo />} />
             <Route path="admin-info" element={<AdminInfo />} />
             <Route path="profile" element={<AdminProfile />} />
+            <Route path="add-user" element={<Register />} />
           </Routes>
         </div>
       </div>

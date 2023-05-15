@@ -5,10 +5,14 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import "./index.css";
 import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./AuthProvider";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <App />
+  <AuthProvider>
+  <App />
+
+  </AuthProvider>
   </BrowserRouter>
 );
 

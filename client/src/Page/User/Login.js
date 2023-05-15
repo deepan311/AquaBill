@@ -1,118 +1,103 @@
-import React, { useState } from "react";
+import React, { useContext, useState,useEffect } from "react";
 import { Formik, Field, Form } from "formik";
 import Logo1 from "../../asset/Logo2.png";
 import { ImSpinner9 } from "react-icons/im";
+import { AuthContext } from "../../AuthProvider";
+import { NavLink } from "react-router-dom";
 
-function Login() {
-  const [otp, setotp] = useState({ num: null, status: false });
+function AdminLogin() {
+  const [pageload, setpageload] = useState(false);
 
-  const sendCodeValidate = (e) => {
-    let error = {};
-
-    if (e.phoneNum.length >= 11) {
-      error.phoneNum = "minimum 10 Cheracter";
+const errName = ()=>{
+  if(error){
+    if(error.includes('Firebase: Error (auth/user-not-found).')){
+      return "User Not Found"
     }
-    if (e.phoneNum.length < 1) {
-      error.phoneNum = "Enter Valid Number";
+    else if(error.includes('Firebase: Error (auth/wrong-password).')){
+      return "Passoword wrong"
+    } else{
+      return error
     }
-    return error;
-  };
+  }
+}
+  const {signIn,error} = useContext(AuthContext)
 
   const loginValidate = (e) => {
     let error = {};
-    if (e.validNum.length < 1) {
-      error.validNum = "Enter Valid Number";
+
+    if (e.email.length < 1) {
+      error.email = "Email Field Required";
+    }
+    if (e.password.length < 1) {
+      error.password = "password Field Required";
     }
     return error;
   };
 
-  const sendCode = (value, action) => {
-    console.log(value);
-    setotp({ status: true, num: value.phoneNum });
-    action.setSubmitting(false);
-  };
+  const login = async(val) => {
+   setpageload(true)
+   await signIn(val.email,val.password)
+   setpageload(false)
 
-  const login = (e) => {
-    console.log(e);
   };
-
   return (
-    <div className="w-full flex h-screen items-center justify-center bg-gradient-to-r from-indigo-800 to-blue-500">
+    <div className="w-full h-screen flex justify-center items-center bg-gradient-to-r from-black/80 to-slate-600">
       <div className="flex-col w-full md:w-2/6 bg-black/60 rounded-md px-10 py-5 justify-between">
         <div className=" flex justify-center">
           <img src={Logo1} alt="aquaBill" className="w-2/4" />
         </div>
+        {/* <h3 className="text-center text-xl text-slate-100 font-bold">Admin Login</h3> */}
 
-        {!otp.status ? (
-          <Formik 
-            onSubmit={sendCode}
-            initialValues={{ phoneNum: '', validNum: "" }}
-            validate={sendCodeValidate}
-          >
-            {({ errors }) => (
-              <Form>
-              <div className="w-full flex items-center bg-white h-11">
-                <h3 className="font-bold pl-2">+91</h3>
+        <Formik
+          onSubmit={login}
+          initialValues={{ email: "", password: "" }}
+          validate={loginValidate}
+        >
+          {({ errors, handleBlur, touched }) => (
+            <Form>
               <Field
-                  name="phoneNum"
-                  type="number"
-                  className="w-full h-11 my-5 px-5 outline-none "
-                  placeholder="Enter Phone Number"
-                />
-              </div>
+                name="email"
+                type="email"
+                className={`w-full h-11 my-5 px-5 outline-none `}
+                placeholder="Enter Email"
+                onBlur={handleBlur}
+              />
+
+              <Field
+                name="password"
+                type="password"
+                className={`w-full h-11 my-5 px-5 outline-none `}
+                placeholder="Enter password"
+                onBlur={handleBlur}
+              />
+              {pageload && (
                 <div className="w-full flex justify-center">
                   <ImSpinner9 className="text-white text-xl animate-spin" />
                 </div>
-                <h2 className="text-red-500 text-center text-xl">
-                  {errors && errors.phoneNum}
-                </h2>
-                <button
-                  type="submit"
-                  className="bg-gradient-to-r from-orange-600 to-orange-400 font-bold w-full h-10 my-5 rounded-sm text-white"
-                >
-                  Send Code
-                </button>
-              </Form>
-            )}
-          </Formik>
-        ) : (
-          <Formik onSubmit={login} validate={loginValidate}>
-            {({ errors }) => (
-              <Form>
-                <h3 className="text-white text-center font-bold">
-                  OTP Send Successfully{" "}
-                  <span className="text-emerald-300">{otp.num} </span>
-                  <span className="text-blue-400 underline cursor-pointer">
-                    Resend{" "}
-                  </span>
-                </h3>
-              
-               <Field
-                  name="validNum"
-                  type="number"
-                  className="w-full h-11 my-5 px-5 outline-none "
-                  placeholder="Enter OTP Code"
-                />
-              
-                <div className="w-full flex justify-center">
-                  <ImSpinner9 className="text-white text-xl animate-spin" />
-                </div>
-                <h2 className="text-red-500 text-center text-xl">
-                  {errors && errors.validNum}
-                </h2>
-                <button
-                  type="submit"
-                  className="bg-gradient-to-r from-orange-600 to-orange-400 font-bold w-full h-10 my-5 rounded-sm text-white"
-                >
-                  Submit Code
-                </button>
-              </Form>
-            )}
-          </Formik>
-        )}
+              )}
+               <h2 className={`font-bold text-red-500 text-center text-md my-2`}>
+                {error  && errName()}  
+              </h2>
+
+              <h2 className={`font-bold text-red-500 text-center text-md my-2`}>
+                {errors.email && touched.email && errors.email}
+              </h2>
+              <h2 className={`font-bold text-red-500 text-center text-md my-2`}>
+                {errors.password && touched.password && errors.password}
+              </h2>
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-orange-600 to-orange-400 font-bold w-full h-10 my-5 rounded-sm text-white"
+              >
+                Login
+              </button>
+
+            </Form>
+          )}
+        </Formik>
       </div>
     </div>
   );
 }
 
-export default Login;
+export default AdminLogin;
