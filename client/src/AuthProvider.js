@@ -1,11 +1,11 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext, useRef } from "react";
 import {
   auth,
   firestore,
   createUserDoc,
   deleteUserAndData,
 } from "./firebase/config";
-import { doc, getDoc, setDoc,collection,onSnapshot } from "firebase/firestore";
+import { doc, getDoc, setDoc, collection, onSnapshot } from "firebase/firestore";
 
 import {
   createUserWithEmailAndPassword,
@@ -25,24 +25,28 @@ const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [allData, setallData] = useState([]);
 
+  const isSigningUp = useRef(false);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+      if (!isSigningUp.current) {
+        setCurrentUser(user);
+      }
       setLoading(false);
+
     });
 
     return unsubscribe;
   }, []);
 
   const signIn = async (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password)
-      .then(async (res) => {
-        await createUserDoc(res, { name: "deepannn" });
-        return res;
-      })
-      .catch((err) => {
-        setError(err.message);
-      });
+    try {
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      await createUserDoc(user, { name: "deepannn" });
+      return user;
+    } catch (error) {
+      setError( error.message);
+    }
   };
 
   const fetchData = async (user) => {
@@ -63,7 +67,7 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  const fetchAllData = async()=>{
+  const fetchAllData = async () => {
 
 
     const collectionRef = collection(firestore, "samData");
@@ -79,7 +83,6 @@ const AuthProvider = ({ children }) => {
     });
 
   }
-
   const signUp = async (email, password, addData) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -87,6 +90,7 @@ const AuthProvider = ({ children }) => {
         email,
         password
       );
+      isSigningUp.current = true;
       setLoading(true);
       console.log(userCredential);
       await createUserDoc(userCredential.user, addData)
@@ -100,7 +104,7 @@ const AuthProvider = ({ children }) => {
         .catch(async (err) => {
           await deleteUserAndData(userCredential.user);
         });
-        // return userCredential
+      return userCredential
       setLoading(false);
     } catch (error) {
       setError(error.message || error);

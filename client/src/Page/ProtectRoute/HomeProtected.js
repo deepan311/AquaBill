@@ -27,7 +27,7 @@ if (loading ) {
    return children
   }
   if(!currentUser){
-   return <Navigate to='./login'replace/>
+   return <Navigate to='/login'replace/>
   }
 
 };

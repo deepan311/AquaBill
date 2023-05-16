@@ -1,4 +1,4 @@
-import React, { useContext,useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Login from "./Page/User/Login";
 import AdminLogin from "./Page/Admin/AdminLogin";
 import AdminDashbord from "./Page/Admin/Dashbord/AdminDashbord";
@@ -11,7 +11,7 @@ import UserDashbord from "./Page/User/UserDashbord";
 import { AuthContext } from "./AuthProvider";
 
 function App() {
-  const { logOut, fetchData, currentUser, userData } = useContext(AuthContext);
+  const { logOut, fetchData, currentUser, userData,error } = useContext(AuthContext);
   console.log(currentUser);
   useEffect(() => {
     if (currentUser) {
@@ -23,7 +23,7 @@ function App() {
       }
     }
   }, []);
-
+console.log(error)
   return (
     <div>
       <Routes>
@@ -43,8 +43,10 @@ function App() {
             </LoginProtected>
           }
         />
-     
-        <Route path="/admin/*" element={<AdminDashbord />} />
+
+        <Route path="/admin/*" element={
+          <HomeProtected> <AdminDashbord /></HomeProtected>
+        } />
         <Route path="/admin-login" element={<AdminLogin />} />
       </Routes>
     </div>

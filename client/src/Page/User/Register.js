@@ -7,7 +7,7 @@ import { AuthContext } from "../../AuthProvider";
 function Register() {
   const [showToast, setShowToast] = useState(false);
   const [pageload, setpageload] = useState(false);
-  const { signUp,error } = useContext(AuthContext);
+  const { signUp,error,logOut } = useContext(AuthContext);
 
   const errName = ()=>{
     if(error){
@@ -24,8 +24,8 @@ function Register() {
   const initialValue = {
     name: "",
     email: "",
-    password: "Deepan123@",
-    cpassword: "Deepan123@",
+    password: "",
+    cpassword: "",
     address: "",
     num: "",
     roll:'user'
@@ -85,7 +85,9 @@ function Register() {
     setpageload(true);
    const response= await signUp(val.email, val.password, val);
    setpageload(false);
-    
+    if(response){
+      logOut()
+    }
    console.log(response)
 
   

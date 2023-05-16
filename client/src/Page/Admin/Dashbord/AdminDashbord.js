@@ -85,12 +85,7 @@ function AdminDashbord() {
                   <AiFillDashboard className="text-2xl" />
                 </a>
 
-                <a
-                  href="#"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                ><h1>Hi</h1>
-                  <h3> {userData.name}</h3>
-                </a>
+               <h4 className="mx-3 px-4 text-white">{userData.name}</h4>
               </div>
             </div>
           </div>
@@ -155,7 +150,7 @@ function AdminDashbord() {
                   <span>Admins</span>
                 </NavLink>
               </li>
-              <li>
+              {/* <li>
                 <NavLink
                   to="bill-gen"
                   className={`flex items-center space-x-2 py-4 px-4 rounded-md hover:bg-blue-600 w-full ${
@@ -165,7 +160,7 @@ function AdminDashbord() {
                   <RiBillFill />
                   <span>Generate Bill</span>
                 </NavLink>
-              </li>
+              </li> */}
               <li>
                 <NavLink
                   to="add-user"

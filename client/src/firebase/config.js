@@ -44,7 +44,7 @@ export const createUserDoc = async (user, addData) => {
       name:addData.name,
       address:addData.address,
       phone:addData.num,
-      paymentBill:null,
+      paymentBill:0,
       numOfWaterUse:0,
       createAt: serverTimestamp(),
       roll:'user'
