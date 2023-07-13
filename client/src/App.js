@@ -1,23 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useContext, useEffect } from "react";
+import Login from "./Page/User/Login";
+import AdminLogin from "./Page/Admin/AdminLogin";
+import AdminDashbord from "./Page/Admin/Dashbord/AdminDashbord";
+import { Routes, Route } from "react-router-dom";
+import Register from "./Page/User/Register";
+
+import LoginProtected from "./Page/ProtectRoute/LoginProtected";
+import HomeProtected from "./Page/ProtectRoute/HomeProtected";
+import UserDashbord from "./Page/User/UserDashbord";
+import { AuthContext } from "./AuthProvider";
 
 function App() {
+  const { logOut, fetchData, currentUser, userData,error } = useContext(AuthContext);
+  console.log(currentUser);
+  useEffect(() => {
+    if (currentUser) {
+      const fetch = async (user) => {
+        await fetchData(user);
+      };
+      if (!userData) {
+        fetch(currentUser);
+      }
+    }
+  }, []);
+console.log(error)
   return (
-    <div className="text-center">
-      <header className="bg-gray-800 text-white flex flex-col items-center justify-center min-h-screen text-3xl">
-        <img src={logo} className="pointer-events-none h-40 animate-spin" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="text-blue-400"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomeProtected>
+              <UserDashbord />
+            </HomeProtected>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <LoginProtected>
+              <Login />
+            </LoginProtected>
+          }
+        />
+
+        <Route path="/admin/*" element={
+          <HomeProtected> <AdminDashbord /></HomeProtected>
+        } />
+        <Route path="/admin-login" element={<AdminLogin />} />
+      </Routes>
     </div>
   );
 }
